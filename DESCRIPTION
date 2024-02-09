@@ -1,14 +1,13 @@
 Package: myplots.pw
-Title: This Package Contains Useful Plotting Functions
-Version: 0.0.0.9000
+Title: Useful Plotting Functions
+Version: 0.1.0
 Authors@R: 
-    person("Priscilla", "Wen", , "sunnywen098@gmail.com", role = c("aut", "cre"),
+    person("Priscilla", "Wen", email = "sunnywen098@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This package provides a collection of useful plotting functions for data visualization in R.
+Description: This package provides a collection of useful plotting functions for data visualization in R. It includes functions for creating histograms (`ghist`) and box plots (`gbox`), scatter plots (`ggraph`), and influence plots (`influence_plots`) using the popular ggplot2 package.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
-Depends:
-    ggplot2,
-    R (>= 3.5)
+Imports:
+    ggplot2
