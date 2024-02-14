@@ -30,6 +30,7 @@
 #'
 #' @import ggplot2
 #' @export
+
 gbox <- function(x, y = NULL, orientation = "vertical") {
   if (is.null(y)) {
     # Single numeric vector provided, create a box plot
@@ -50,18 +51,18 @@ gbox <- function(x, y = NULL, orientation = "vertical") {
     }
   } else {
     # Numeric and categorical variables provided, create side-by-side box plots
-    if (orientation == "horizontal") {
+    if (orientation == "vertical") {
+      ggplot(data.frame(x = x, y = y), aes(x = y, y = x)) +
+        geom_boxplot(fill = "skyblue") +
+        labs(title = "Side-by-Side Box Plots",
+             x = deparse(substitute(y)),
+             y = deparse(substitute(x)))
+    } else if (orientation == "horizontal") {
       ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
         geom_boxplot(fill = "skyblue") +
         labs(title = "Side-by-Side Box Plots",
              x = deparse(substitute(x)),
              y = deparse(substitute(y)))
-    } else if (orientation == "vertical") {
-      ggplot(data.frame(x = y, y = x), aes(x = y, y = x)) +
-        geom_boxplot(fill = "skyblue") +
-        labs(title = "Side-by-Side Box Plots",
-             x = deparse(substitute(y)),
-             y = deparse(substitute(x)))
     } else {
       stop("Invalid orientation. Please choose 'vertical' or 'horizontal'.")
     }
