@@ -1,43 +1,49 @@
-#' Create a ggplot box plot.
+#' Create a ggplot box plot or side-by-side box plots.
 #'
-#' This function creates a ggplot-style box plot of a given numeric vector,
-#' or side-by-side box plots if both a numeric and a categorical variable are provided.
+#' This function creates a ggplot box plot when a single numeric vector is provided, 
+#' or side-by-side box plots when one numeric and one categorical variable are given.
 #'
-#' @param data A data frame containing the variables to be plotted.
-#' @param x_var The variable for the x-axis.
-#' @param y_var (Optional) The variable for the y-axis.
-#' @param orientation The orientation of the box plots: "vertical" or "horizontal".
+#' @param x A numeric vector for the x-axis if only one variable is provided, 
+#' or the numeric vector for the y-axis if two variables are provided.
+#' @param y A numeric vector for the y-axis. Only used if two variables are provided.
+#' @param orientation The orientation of the box plots. 
+#' It can be either "vertical" (default) or "horizontal".
 #'
-#' @return This function returns a ggplot box plot object.
+#' @return A ggplot object representing the box plot or side-by-side box plots.
 #'
 #' @examples
-#' ## Create a box plot of a numeric vector.
-#' data <- data.frame(values = rnorm(100))
-#' gbox(data, "values", orientation = "vertical")
+#' ## Example 1: Single numeric vector (vertical box plot)
+#' set.seed(123)
+#' x <- rnorm(100)
+#' gbox(x)
 #'
-#' ## Create side-by-side box plots of a numeric and a categorical variable.
-#' data <- data.frame(values = rnorm(100), category = sample(c("A", "B"), 100, replace = TRUE))
-#' gbox(data, "values", "category", orientation = "vertical")
+#' ## Example 2: Single numeric vector (horizontal box plot)
+#' gbox(x, orientation = "horizontal")
 #'
-#' @import
-#'   ggplot2
+#' ## Example 3: Numeric and categorical variables (vertical box plot)
+#' set.seed(123)
+#' y <- factor(sample(c("A", "B", "C"), 100, replace = TRUE))
+#' gbox(x, y)
 #'
+#' ## Example 4: Numeric and categorical variables (horizontal box plot)
+#' gbox(x, y, orientation = "horizontal")
+#'
+#' @import ggplot2
 #' @export
-
-gbox <- function(data, x_var, y_var = NULL, orientation = "vertical") {
-  if (is.null(y_var)) {
+gbox <- function(x, y = NULL, orientation = "vertical") {
+  if (is.null(y)) {
     # Single numeric vector provided, create a box plot
     if (orientation == "vertical") {
-      ggplot(data, aes(x = 1, y = !!rlang::sym(x_var))) +
+      ggplot(data.frame(y = x), aes(x = 1, y = y)) +
         geom_boxplot(fill = "skyblue") +
         labs(title = "Box Plot",
              x = "",
-             y = x_var)
+             y = deparse(substitute(x)))
     } else if (orientation == "horizontal") {
-      ggplot(data, aes(x = !!rlang::sym(x_var), y = 1)) +
+      ggplot(data.frame(x = x), aes(x = x, y = 1)) +
         geom_boxplot(fill = "skyblue") +
         labs(title = "Box Plot",
-             x = x_var,
+             x = deparse(substitute(x)),
              y = "")
     } else {
       stop("Invalid orientation. Please choose 'vertical' or 'horizontal'.")
@@ -45,19 +51,20 @@ gbox <- function(data, x_var, y_var = NULL, orientation = "vertical") {
   } else {
     # Numeric and categorical variables provided, create side-by-side box plots
     if (orientation == "horizontal") {
-      ggplot(data, aes_string(x = x_var, y = y_var)) +
+      ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
         geom_boxplot(fill = "skyblue") +
         labs(title = "Side-by-Side Box Plots",
-             x = x_var,
-             y = y_var)
+             x = deparse(substitute(x)),
+             y = deparse(substitute(y)))
     } else if (orientation == "vertical") {
-      ggplot(data, aes_string(x = y_var, y = x_var)) +
+      ggplot(data.frame(x = y, y = x), aes(x = y, y = x)) +
         geom_boxplot(fill = "skyblue") +
         labs(title = "Side-by-Side Box Plots",
-             x = y_var,
-             y = x_var)
+             x = deparse(substitute(y)),
+             y = deparse(substitute(x)))
     } else {
       stop("Invalid orientation. Please choose 'vertical' or 'horizontal'.")
     }
   }
 }
+
